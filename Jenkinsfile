@@ -2,7 +2,9 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = 'sujithmsuji/devops-nginx:latest'
+        DOCKER_REPO = 'sujithmsuji/devops-nginx'
+        IMAGE_VERSION = "1.${BUILD_NUMBER}"
+        DOCKER_IMAGE = "${DOCKER_REPO}:1.${BUILD_NUMBER}"
     }
 
     stages {
@@ -53,18 +55,21 @@ pipeline {
             }
         }
 
+        stage('Update Kubernetes Image') {
+            steps {
+                sh '''
+                    sed -i "s|IMAGE_VERSION|1.${BUILD_NUMBER}|g" deployment.yaml
+                    cat deployment.yaml
+                '''
+            }
+        }
+
         stage('Deploy to Kubernetes') {
             steps {
                 sh '''
                     kubectl apply -f deployment.yaml
                     kubectl apply -f service.yaml
                 '''
-            }
-        }
-
-        stage('Restart Deployment') {
-            steps {
-                sh 'kubectl rollout restart deployment/nginx-deployment'
             }
         }
 
