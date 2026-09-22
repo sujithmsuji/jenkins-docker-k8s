@@ -59,7 +59,8 @@ pipeline {
             steps {
                 sh '''
                     sed -i "s|IMAGE_VERSION|1.${BUILD_NUMBER}|g" deployment.yaml
-                    cat deployment.yaml
+                    echo "Kubernetes image:"
+                    grep "image:" deployment.yaml
                 '''
             }
         }
@@ -78,10 +79,11 @@ pipeline {
                 sh '''
                     kubectl rollout status deployment/nginx-deployment
                     kubectl get deployment nginx-deployment
-                    kubectl get pods -o wide
+                    kubectl get pods -l app=nginx -o wide
                     kubectl get service nginx-service
                 '''
             }
         }
     }
 }
+
