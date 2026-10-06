@@ -8,7 +8,7 @@ spec:
   accessModes:
     - ReadWriteOnce
 
-  storageClassName: gp2
+  storageClassName: ebs-gp3
 
   resources:
     requests:
