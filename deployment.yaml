@@ -92,11 +92,3 @@ spec:
             timeoutSeconds: 2
             failureThreshold: 3
 
-          volumeMounts:
-            - name: nginx-storage
-              mountPath: /usr/share/nginx/html/data
-
-      volumes:
-        - name: nginx-storage
-          persistentVolumeClaim:
-            claimName: nginx-pvc
